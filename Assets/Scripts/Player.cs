@@ -12,7 +12,8 @@ public class Player : MonoBehaviour,IKitchenObjectParent
       get;
       private set;
    }
-   
+
+   public event EventHandler OnPickedSomething;
    
    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
    //这个class是OnSelectedCounterChanged事件的专门数据类，命名就是事件名+EventArgs。同时类继承EventArgs
@@ -188,6 +189,10 @@ public class Player : MonoBehaviour,IKitchenObjectParent
    public void SetKitchenObject(KitchenObjects kitchenObject)
    {
       this.kitchenObject = kitchenObject;
+      if (kitchenObject != null )
+      {
+         OnPickedSomething?.Invoke(this,EventArgs.Empty);
+      }
    }
 
    public void ClearKitchenObject()

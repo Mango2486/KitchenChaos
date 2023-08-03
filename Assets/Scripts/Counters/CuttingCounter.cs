@@ -7,8 +7,12 @@ using UnityEngine.Video;
 
 public class CuttingCounter : BaseCounter,IHasProgress
 {
-
-
+    
+    //This event will belongs to all cuttingCounters and we just need to set it
+    //This event is for sound
+    public static event EventHandler OnAnyCut; 
+    
+    //These two event are for visual
     public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
 
     public event EventHandler OnCut;
@@ -71,6 +75,7 @@ public class CuttingCounter : BaseCounter,IHasProgress
             // There is a KitchenObject here and it can be cut
             cuttingProgress++;
             OnCut?.Invoke(this,EventArgs.Empty);
+            OnAnyCut?.Invoke(this,EventArgs.Empty);
             CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
             OnProgressChanged?.Invoke(this,new IHasProgress.OnProgressChangedEventArgs
             {

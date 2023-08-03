@@ -6,7 +6,15 @@ using UnityEngine;
 public class DeliveryCounter : BaseCounter
 {
  
-   
+   //Because now we only hava one DeliveryCounter so we can make it an instance
+   // it can be modified if more deliveryCounter were added.
+   public static DeliveryCounter Instance { get; private set; }
+
+   private void Awake()
+   {
+      Instance = this;
+   }
+
    public override void Interact(Player player)
    {  
       //Player is holding something
