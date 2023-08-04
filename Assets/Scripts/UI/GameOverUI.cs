@@ -20,8 +20,8 @@ public class GameOverUI : MonoBehaviour
         if (GameManager.Instance.IsGameOver())
         {
             Show();
-            
             recipesDeliveredText.text = DeliveryManager.Instance.GetSuccussfulRecipesAmount().ToString();
+            StartCoroutine(nameof(BackToMainCorutine));
         }
         else
         {
@@ -38,6 +38,12 @@ public class GameOverUI : MonoBehaviour
     private void Show()
     {
         gameObject.SetActive(true);
+    }
+
+    IEnumerator BackToMainCorutine()
+    {
+        yield return new WaitForSeconds(3f);
+        Loader.Load(Loader.Scene.MainMenuScene);
     }
 }
 

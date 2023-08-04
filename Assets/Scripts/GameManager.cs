@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
    public static GameManager Instance { get; private set; }
 
    public event EventHandler OnStateChanged;
+   public event EventHandler OnGamePaused;
+   public event EventHandler onGameUnPaused;
 
    private enum State
    {
@@ -18,16 +20,52 @@ public class GameManager : MonoBehaviour
    }
 
    private State state;
-
-   [SerializeField]private float watingToStartTimer = 1f;
+   
    [SerializeField]private float countdownToStartTimer = 3f;
    [SerializeField]private float gamePlayingTimerMax = 10f;
    private float gamePlayingTimer;
-
+   private bool isGamePaused = false;
+   
    private void Awake()
    {
       state = State.WaitingToStart;
       Instance = this;
+   }
+
+   private void Start()
+   {
+      GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
+      GameInput.Instance.OnInteractActoin += GameInput_OnInteractActoin;
+   }
+
+   private void GameInput_OnInteractActoin(object sender, EventArgs e)
+   {
+      if (state == State.WaitingToStart)
+      {
+         state = State.CountdownToStart;
+         OnStateChanged?.Invoke(this,EventArgs.Empty);
+      }
+   }
+
+   private void GameInput_OnPauseAction(object sender, EventArgs e)
+   {
+      TogglePauseGame();
+   }
+
+   public void TogglePauseGame()
+   {
+      isGamePaused = !isGamePaused;
+      if (isGamePaused)
+      {
+         Time.timeScale = 0f;
+         OnGamePaused?.Invoke(this,EventArgs.Empty);
+      }
+      else
+      {
+         Time.timeScale = 1f;
+         onGameUnPaused?.Invoke(this,EventArgs.Empty);
+      }
+
    }
 
    private void Update()
@@ -35,12 +73,7 @@ public class GameManager : MonoBehaviour
       switch (state)
       {
          case State.WaitingToStart:
-            watingToStartTimer -= Time.deltaTime;
-            if (watingToStartTimer < 0f)
-            {
-               state = State.CountdownToStart;
-               OnStateChanged?.Invoke(this, EventArgs.Empty);
-            }
+         
 
             break;
          case State.CountdownToStart:
@@ -66,8 +99,6 @@ public class GameManager : MonoBehaviour
          case State.GameOver:
             break;
       }
-
-      Debug.Log(state);
    }
 
    public bool IsGamePlaying()

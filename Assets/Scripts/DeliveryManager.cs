@@ -32,7 +32,7 @@ public class DeliveryManager : MonoBehaviour
 
     private void Update()
     {
-        if (!isInstantiating && waitingRecipeSOList.Count < waitingRecipesMax)
+        if (GameManager.Instance.IsGamePlaying()&&!isInstantiating && waitingRecipeSOList.Count < waitingRecipesMax)
         {
             StartCoroutine("SpawnRecipeCoroutine");
         }

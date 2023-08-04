@@ -10,7 +10,12 @@ public class CuttingCounter : BaseCounter,IHasProgress
     
     //This event will belongs to all cuttingCounters and we just need to set it
     //This event is for sound
-    public static event EventHandler OnAnyCut; 
+    public static event EventHandler OnAnyCut;
+    new public static void ResetStaticData()
+    {
+        OnAnyCut = null;
+    }
+    
     
     //These two event are for visual
     public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
